@@ -1,0 +1,8 @@
+{
+  "buildCommand": null,
+  "outputDirectory": "public",
+  "rewrites": [
+    { "source": "/financieringslandschap", "destination": "/index.html" },
+    { "source": "/financieringslandschap/", "destination": "/index.html" }
+  ]
+}
