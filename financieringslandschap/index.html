@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Financieringslandschap Wooncooperaties</title>
+<title>Financieringslandschap Wooncooperaties — Solidair Woonfonds</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700&family=Funnel+Display:wght@700&display=swap" rel="stylesheet">
@@ -23,47 +23,111 @@
   body { font-family: 'Albert Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
   .page-header { padding: 48px 0 32px; text-align: center; }
   .eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--coral); margin-bottom: 6px; }
-  .page-header h1 { font-family: 'Funnel Display', sans-serif; font-size: 32px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-  .page-header p { font-size: 15px; color: var(--sub); max-width: 620px; margin: 0 auto; }
-  .container { max-width: 920px; margin: 0 auto; padding: 0 24px 80px; }
+  .page-header h1 { font-family: 'Funnel Display', sans-serif; font-size: 36px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .page-header p { font-size: 16px; color: var(--sub); max-width: 700px; margin: 0 auto; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
   .category { margin-bottom: 48px; }
-  .cat-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--line); }
+
+  /* Cat header — clickable accordion trigger */
+  .cat-header {
+    display: flex; align-items: center; gap: 14px;
+    padding-bottom: 12px; border-bottom: 2px solid var(--line);
+    cursor: pointer; user-select: none;
+    transition: background 0.15s ease;
+    border-radius: 8px 8px 0 0;
+    padding: 10px 12px 12px;
+    margin: 0 -12px;
+  }
+  .cat-header:hover { background: rgba(0,0,0,0.02); }
   .cat-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .cat-icon i { font-size: 16px; color: #fff; }
-  .cat-title { font-size: 20px; font-weight: 700; color: var(--text); }
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-  .card { background: var(--card); border-radius: 16px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; flex-direction: column; }
+  .cat-title { font-size: 22px; font-weight: 700; color: var(--text); flex: 1; }
+  .cat-count { font-size: 12px; font-weight: 500; color: var(--muted); background: var(--bg); border: 1px solid var(--line); padding: 2px 10px; border-radius: 10px; white-space: nowrap; }
+  .cat-chevron { font-size: 14px; color: var(--muted); transition: transform 0.25s ease; flex-shrink: 0; }
+  .category.open .cat-chevron { transform: rotate(90deg); }
+
+  /* Cat body — collapsible wrapper for note + cards */
+  .cat-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .category.open .cat-body {
+    max-height: 5000px;
+  }
+  .cat-body-inner { padding-top: 20px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+
+  /* Card base */
+  .card {
+    background: var(--card); border-radius: 16px; padding: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    display: flex; flex-direction: column;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .card.expanded { border-left-color: var(--cat-color, var(--line)); }
+
   .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
-  .card-name { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; flex: 1; }
+  .card-name { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.3; flex: 1; }
   .card-amount { font-size: 12px; font-weight: 600; color: var(--sub); background: var(--bg); padding: 3px 10px; border-radius: 8px; white-space: nowrap; margin-left: 10px; flex-shrink: 0; }
-  .card-desc { font-size: 13px; color: var(--sub); line-height: 1.55; margin-bottom: 16px; }
+  .card-desc { font-size: 15px; color: var(--sub); line-height: 1.55; margin-bottom: 12px; }
+
+  /* Card details — hidden by default */
+  .card-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .card.expanded .card-details {
+    max-height: 2000px;
+  }
+
   .detail-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
   .detail-row i { width: 16px; text-align: center; color: var(--muted); font-size: 12px; margin-top: 3px; flex-shrink: 0; }
-  .detail-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); margin-bottom: 1px; }
-  .detail-value { font-size: 13px; color: var(--text); line-height: 1.45; }
+  .detail-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); margin-bottom: 1px; }
+  .detail-value { font-size: 14px; color: var(--text); line-height: 1.45; }
   .detail-value a { color: var(--coral); text-decoration: none; }
   .detail-value a:hover { text-decoration: underline; }
+
   .phases { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; padding-top: 14px; }
-  .phase { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; padding: 3px 10px; border-radius: 10px; }
+  .phase { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; padding: 3px 10px; border-radius: 10px; }
   .phase-initiatief { color: #c99300; background: rgba(244,180,0,0.12); }
   .phase-planontwikkeling { color: #c87a1a; background: rgba(240,144,32,0.12); }
   .phase-realisatie { color: #2aaa50; background: rgba(59,210,105,0.12); }
   .phase-exploitatie { color: #3a7bc8; background: rgba(74,144,217,0.12); }
+
+  /* Toggle hint */
+  .card-toggle {
+    font-size: 12px; font-weight: 500; color: var(--muted);
+    margin-top: 8px;
+    transition: color 0.15s ease;
+  }
+  .card:hover .card-toggle { color: var(--sub); }
+  .card-toggle .arrow-collapsed,
+  .card-toggle .arrow-expanded { display: inline; }
+  .card.expanded .card-toggle .arrow-collapsed { display: none; }
+  .card:not(.expanded) .card-toggle .arrow-expanded { display: none; }
+
   .legend { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px; }
   .footer { text-align: center; padding: 32px 24px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); }
   .footer a { color: var(--coral); text-decoration: none; }
-  .note { font-size: 12px; color: var(--muted); background: rgba(255,92,84,0.06); border-radius: 8px; padding: 10px 14px; margin-bottom: 20px; line-height: 1.5; }
-  @media (max-width: 600px) {
-    .page-header h1 { font-size: 24px; }
+  .note { font-size: 13px; color: var(--muted); background: rgba(255,92,84,0.06); border-radius: 8px; padding: 10px 14px; margin-bottom: 20px; line-height: 1.5; }
+
+  @media (max-width: 640px) {
+    .page-header h1 { font-size: 26px; }
     .cards { grid-template-columns: 1fr; }
-    .cat-title { font-size: 17px; }
+    .cat-title { font-size: 18px; }
   }
 </style>
 </head>
 <body>
 
 <div class="page-header">
-  <div class="eyebrow">CrowdBuilding</div>
+  <div class="eyebrow">Solidair Woonfonds</div>
   <h1>Financieringslandschap Wooncooperaties</h1>
   <p>Compleet overzicht van financieringsbronnen voor wooncooperaties in Nederland. Gebaseerd op onderzoek april 2026. Alle bronnen geverifieerd.</p>
 </div>
@@ -80,594 +144,745 @@
   <!-- ═══════════════════════════════════════════════ -->
   <!-- 1. BANKLENINGEN & HYPOTHEKEN -->
   <!-- ═══════════════════════════════════════════════ -->
-  <section class="category">
+  <section class="category" data-color="#4A90D9">
     <div class="cat-header">
       <div class="cat-icon" style="background:#4A90D9"><i class="fa-solid fa-landmark"></i></div>
       <div class="cat-title">Bankleningen & Hypotheken</div>
+      <span class="cat-count">5 bronnen</span>
+      <i class="fa-solid fa-chevron-right cat-chevron"></i>
     </div>
+    <div class="cat-body"><div class="cat-body-inner">
     <div class="note">Let op het onderscheid: wooncooperaties (collectief eigendom) krijgen zakelijke financiering (max ~70% LTV). CPO (individueel eigendom) krijgt gewone hypotheken. Woningcorporaties (toegelaten instellingen) hebben WSW-borging &mdash; een compleet ander traject.</div>
     <div class="cards">
 
-      <div class="card">
+      <div class="card" style="--cat-color:#4A90D9">
         <div class="card-top">
           <div class="card-name">GLS Bank &mdash; Cooperatieve hypotheek</div>
           <div class="card-amount">~70% LTV</div>
         </div>
         <div class="card-desc">Duitse cooperatieve bank met antroposofische wortels. Meest ervaren hypotheekverstrekker voor Nederlandse wooncooperaties. Financierde o.a. De Warren en Ecodorp Boekel.</div>
-        <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">GLS Bank (Bochum, Duitsland)</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-percent"></i><div><div class="detail-label">Rente</div><div class="detail-value">1&ndash;3% &mdash; significant lager dan Nederlandse banken. De Warren kreeg 1,5%.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">Non-profit structuur (bewoners mogen niet profiteren van vastgoed). 1% van hypotheekbedrag investeren in GLS-certificaten. Alleen huurcooperaties (geen koopwoningen).</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Track record NL</div><div class="detail-value">De Warren (Amsterdam, ~75% van &euro;7,4M), Ecodorp Boekel (1,7% vast), De Nieuwe Meent (44%). 150+ woongemeenschappen in Europa.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Voorkeur voor VrijCoop-structuur (anti-speculatie). Duitse bank &mdash; communicatie in het Duits/Engels.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.gls.de/" target="_blank">gls.de</a> &bull; <a href="https://www.ecodorpboekel.nl/gls-de-beste-bank-voor-nederlandse-woongemeenschappen-met-sociale-huurwoningen/" target="_blank">Ecodorp Boekel review</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
           <span class="phase phase-exploitatie">Exploitatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">GLS Bank (Bochum, Duitsland)</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-percent"></i><div><div class="detail-label">Rente</div><div class="detail-value">1&ndash;3% &mdash; significant lager dan Nederlandse banken. De Warren kreeg 1,5%.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">Non-profit structuur (bewoners mogen niet profiteren van vastgoed). 1% van hypotheekbedrag investeren in GLS-certificaten. Alleen huurcooperaties (geen koopwoningen).</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Track record NL</div><div class="detail-value">De Warren (Amsterdam, ~75% van &euro;7,4M), Ecodorp Boekel (1,7% vast), De Nieuwe Meent (44%). 150+ woongemeenschappen in Europa.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Voorkeur voor VrijCoop-structuur (anti-speculatie). Duitse bank &mdash; communicatie in het Duits/Engels.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.gls.de/" target="_blank">gls.de</a> &bull; <a href="https://www.ecodorpboekel.nl/gls-de-beste-bank-voor-nederlandse-woongemeenschappen-met-sociale-huurwoningen/" target="_blank">Ecodorp Boekel review</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#4A90D9">
         <div class="card-top">
           <div class="card-name">Rabobank &mdash; Real Estate Finance Wooncooperatie</div>
           <div class="card-amount">&euro;500K &ndash; &euro;15M</div>
         </div>
         <div class="card-desc">Zakelijke financiering (geen hypotheek) aan de cooperatie als rechtspersoon. Rabobank financierde De Nieuwe Meent &mdash; eerste Nederlandse bank die een wooncooperatie financierde.</div>
-        <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">Rabobank Real Estate Finance, CPO-desk (cpodesk.gez@rabobank.nl)</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">~60&ndash;70% LTV. Business case, huurgaranties/koopcontracten, taxatie. Garantiefonds als buffer (De Nieuwe Meent: &euro;175K).</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Cooperatief DNA. Beschouwt De Nieuwe Meent als &ldquo;blauwdruk&rdquo; voor toekomstige cooperatiefinanciering.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Verschilt per lokale bank. Vroeg contact leggen. GLS Bank bood De Warren lagere rente.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rabobank.nl/bedrijven/zakelijk-financieren/financieringen/real-estate-finance/wooncooperatie" target="_blank">rabobank.nl/wooncooperatie</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
           <span class="phase phase-exploitatie">Exploitatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">Rabobank Real Estate Finance, CPO-desk (cpodesk.gez@rabobank.nl)</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">~60&ndash;70% LTV. Business case, huurgaranties/koopcontracten, taxatie. Garantiefonds als buffer (De Nieuwe Meent: &euro;175K).</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Cooperatief DNA. Beschouwt De Nieuwe Meent als &ldquo;blauwdruk&rdquo; voor toekomstige cooperatiefinanciering.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Verschilt per lokale bank. Vroeg contact leggen. GLS Bank bood De Warren lagere rente.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rabobank.nl/bedrijven/zakelijk-financieren/financieringen/real-estate-finance/wooncooperatie" target="_blank">rabobank.nl/wooncooperatie</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#4A90D9">
         <div class="card-top">
           <div class="card-name">Rabobank &mdash; Ontwikkelbijdrage Collectieve Woonvormen</div>
           <div class="card-amount">&euro;5K &ndash; &euro;25K</div>
         </div>
         <div class="card-desc">Startsubsidie voor opstart- en plankosten van collectieve wooninitiatieven.</div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">KVK-inschrijving, Rabobank-klant, toegewezen locatie, geregistreerd op CrowdBuilding.nl</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-calendar"></i><div><div class="detail-label">Aanvraagrondes 2026</div><div class="detail-value">3 maart, 18 mei, 31 augustus, 2 november</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.crowdbuilding.com/rabobank-wooncooperaties" target="_blank">crowdbuilding.com/rabobank</a></div></div></div>
         <div class="phases">
           <span class="phase phase-initiatief">Initiatief</span>
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">KVK-inschrijving, Rabobank-klant, toegewezen locatie, geregistreerd op CrowdBuilding.nl</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-calendar"></i><div><div class="detail-label">Aanvraagrondes 2026</div><div class="detail-value">3 maart, 18 mei, 31 augustus, 2 november</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.crowdbuilding.com/rabobank-wooncooperaties" target="_blank">crowdbuilding.com/rabobank</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#4A90D9">
         <div class="card-top">
           <div class="card-name">Triodos Bank &mdash; Duurzaam Vastgoed</div>
           <div class="card-amount">min &euro;2M</div>
         </div>
         <div class="card-desc">Zakelijke vastgoedfinanciering voor duurzame projecten. Geen specifiek cooperatie-product &mdash; De Warren werd afgewezen door Triodos. Co-wonen hypotheek is voor individuele (niet-cooperatieve) situaties.</div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">Minimum &euro;2M. 30% betere energieprestatie dan wettelijk vereist. Geen specifiek cooperatieprogramma.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Triodos heeft geen track record met wooncooperaties. Co-wonen hypotheek is voor individuen, niet voor cooperatieve entiteiten.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.triodos.nl/duurzaam-vastgoed" target="_blank">triodos.nl/duurzaam-vastgoed</a> &bull; <a href="https://www.triodos.nl/hypotheken/co-wonen" target="_blank">triodos.nl/co-wonen</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">Minimum &euro;2M. 30% betere energieprestatie dan wettelijk vereist. Geen specifiek cooperatieprogramma.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Triodos heeft geen track record met wooncooperaties. Co-wonen hypotheek is voor individuen, niet voor cooperatieve entiteiten.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.triodos.nl/duurzaam-vastgoed" target="_blank">triodos.nl/duurzaam-vastgoed</a> &bull; <a href="https://www.triodos.nl/hypotheken/co-wonen" target="_blank">triodos.nl/co-wonen</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#4A90D9">
         <div class="card-top">
           <div class="card-name">Individuele hypotheek (CPO)</div>
           <div class="card-amount">Per huishouden</div>
         </div>
         <div class="card-desc">Particuliere hypotheek per huishouden bij CPO (Collectief Particulier Opdrachtgeverschap). Iedere bewoner sluit eigen hypotheek af. Niet voor huurcooperaties.</div>
-        <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Aanbieders</div><div class="detail-value">Rabobank, ABN AMRO, ING, BLG Wonen, Florius, Obvion</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-shield-halved"></i><div><div class="detail-label">NHG</div><div class="detail-value">Mogelijk tot &euro;470K (2026), met energiebesparend &euro;498K. Rentekorting 0,3&ndash;0,6%.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Hypotheek moet rond voor bouwstart. Bouwdepot voor nieuwbouw. Alleen voor koopwoningen (CPO), niet voor huurcooperaties.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rabobank.nl/particulieren/hypotheek/samen-zelfbouwen" target="_blank">Rabobank CPO</a> &bull; <a href="https://www.abnamro.nl/nl/prive/hypotheken/huis-kopen/nieuwbouw/collectief-particulier-opdrachtgeverschap.html" target="_blank">ABN AMRO CPO</a> &bull; <a href="https://www.nhg.nl/" target="_blank">nhg.nl</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Aanbieders</div><div class="detail-value">Rabobank, ABN AMRO, ING, BLG Wonen, Florius, Obvion</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-shield-halved"></i><div><div class="detail-label">NHG</div><div class="detail-value">Mogelijk tot &euro;470K (2026), met energiebesparend &euro;498K. Rentekorting 0,3&ndash;0,6%.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Hypotheek moet rond voor bouwstart. Bouwdepot voor nieuwbouw. Alleen voor koopwoningen (CPO), niet voor huurcooperaties.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rabobank.nl/particulieren/hypotheek/samen-zelfbouwen" target="_blank">Rabobank CPO</a> &bull; <a href="https://www.abnamro.nl/nl/prive/hypotheken/huis-kopen/nieuwbouw/collectief-particulier-opdrachtgeverschap.html" target="_blank">ABN AMRO CPO</a> &bull; <a href="https://www.nhg.nl/" target="_blank">nhg.nl</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
     </div>
+    </div></div>
   </section>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- 2. OVERHEIDSSUBSIDIES & FISCAAL -->
   <!-- ═══════════════════════════════════════════════ -->
-  <section class="category">
+  <section class="category" data-color="#3BD269">
     <div class="cat-header">
       <div class="cat-icon" style="background:#3BD269"><i class="fa-solid fa-landmark-dome"></i></div>
       <div class="cat-title">Overheidssubsidies & Fiscaal</div>
+      <span class="cat-count">10 bronnen</span>
+      <i class="fa-solid fa-chevron-right cat-chevron"></i>
     </div>
+    <div class="cat-body"><div class="cat-body-inner">
     <div class="cards">
 
-      <div class="card">
+      <div class="card" style="--cat-color:#3BD269">
         <div class="card-top">
           <div class="card-name">Fonds Cooperatief Wonen (SVn)</div>
           <div class="card-amount">&euro;60,6M revolverend</div>
         </div>
         <div class="card-desc">Eerste landelijke fonds specifiek voor wooncooperaties. Revolverend leenfonds via SVn. Operationeel eind 2026. Verwachte impact: ~1.000 betaalbare huurwoningen.</div>
-        <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Beheerder</div><div class="detail-value">SVn (Stimuleringsfonds Volkshuisvesting), i.o.v. ministerie VRO</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">12&ndash;100 woningen per project. Middenhuur (tot 2x modaal). Minimaal 5% eigen inbreng. Leningen voor plan- en bouwfase.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Revolverend: terugbetalingen stromen terug voor nieuwe projecten. Werkt als hefboom richting banken.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Nog in opbouw &mdash; eerste financieringen verwacht na eind 2026. Alleen nieuwbouw huurwoningen.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rijksoverheid.nl/actueel/nieuws/2026/01/19/fonds-cooperatief-wonen-gaat-financiering-wooncooperaties-mogelijk-maken" target="_blank">Rijksoverheid</a> &bull; <a href="https://www.svn.nl/over-svn/nieuws/svn-start-fonds-cooeperatief-wonen-voor-betaalbare-nieuwbouwwoningen/" target="_blank">SVn</a></div></div></div>
         <div class="phases">
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Beheerder</div><div class="detail-value">SVn (Stimuleringsfonds Volkshuisvesting), i.o.v. ministerie VRO</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">12&ndash;100 woningen per project. Middenhuur (tot 2x modaal). Minimaal 5% eigen inbreng. Leningen voor plan- en bouwfase.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Revolverend: terugbetalingen stromen terug voor nieuwe projecten. Werkt als hefboom richting banken.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Nog in opbouw &mdash; eerste financieringen verwacht na eind 2026. Alleen nieuwbouw huurwoningen.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rijksoverheid.nl/actueel/nieuws/2026/01/19/fonds-cooperatief-wonen-gaat-financiering-wooncooperaties-mogelijk-maken" target="_blank">Rijksoverheid</a> &bull; <a href="https://www.svn.nl/over-svn/nieuws/svn-start-fonds-cooeperatief-wonen-voor-betaalbare-nieuwbouwwoningen/" target="_blank">SVn</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#3BD269">
         <div class="card-top">
           <div class="card-name">Gemeentelijk Leenfonds Amsterdam</div>
           <div class="card-amount">max &euro;50K/woning</div>
         </div>
         <div class="card-desc">Amsterdams leenfonds van &euro;50M specifiek voor wooncooperaties. Planfase tot &euro;15K, overbruggingslening tot &euro;50K. Rente 1,5%, looptijd 15 jaar.</div>
-        <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">Gemeente Amsterdam, met procesondersteuning via !WOON</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Kavels beschikbaar gesteld door gemeente. Begin 2026 in Zuidoost, meer volgen.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.amsterdam.nl/bestuur-organisatie/college/wethouder/jakob-wedemeijer/persberichten-nieuws-laurens-ivens/amsterdam-start-leenfonds/" target="_blank">amsterdam.nl</a></div></div></div>
         <div class="phases">
           <span class="phase phase-initiatief">Initiatief</span>
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">Gemeente Amsterdam, met procesondersteuning via !WOON</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Kavels beschikbaar gesteld door gemeente. Begin 2026 in Zuidoost, meer volgen.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.amsterdam.nl/bestuur-organisatie/college/wethouder/jakob-wedemeijer/persberichten-nieuws-laurens-ivens/amsterdam-start-leenfonds/" target="_blank">amsterdam.nl</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#3BD269">
         <div class="card-top">
           <div class="card-name">Gemeentelijke steun Utrecht</div>
           <div class="card-amount">&euro;3M budget</div>
         </div>
         <div class="card-desc">Uitvoeringsprogramma Wooncooperaties met &euro;3M budget. Minimaal 2 betaalbare locaties per jaar. Kaartenbak-selectiesysteem. &euro;1,5M gereserveerd voor bijdrage aan Fonds Cooperatief Wonen.</div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.utrecht.nl/wonen-en-leven/wonen/uw-koopwoning/samen-in-een-wooncooperatie-wonen/" target="_blank">utrecht.nl</a></div></div></div>
         <div class="phases">
           <span class="phase phase-initiatief">Initiatief</span>
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.utrecht.nl/wonen-en-leven/wonen/uw-koopwoning/samen-in-een-wooncooperatie-wonen/" target="_blank">utrecht.nl</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#3BD269">
         <div class="card-top">
           <div class="card-name">Overige gemeentelijke steun</div>
           <div class="card-amount">&euro;5K &ndash; &euro;50K</div>
         </div>
         <div class="card-desc">Nijmegen (Woonfonds + jaarlijks 2 locaties CPO), Groningen (Steunpunt Wooncooperaties). Wisselend per gemeente.</div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.nijmegen.nl/huis-delen/collectief-bouwen-wonen/" target="_blank">Nijmegen</a> &bull; <a href="https://gemeente.groningen.nl/steunpunt-wooncooperatie" target="_blank">Groningen</a></div></div></div>
         <div class="phases">
           <span class="phase phase-initiatief">Initiatief</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.nijmegen.nl/huis-delen/collectief-bouwen-wonen/" target="_blank">Nijmegen</a> &bull; <a href="https://gemeente.groningen.nl/steunpunt-wooncooperatie" target="_blank">Groningen</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#3BD269">
         <div class="card-top">
           <div class="card-name">Provinciale subsidies</div>
           <div class="card-amount">&euro;5K &ndash; &euro;200K</div>
         </div>
         <div class="card-desc">Diverse provincies bieden subsidies en renteloze leningen voor collectieve wooninitiatieven.</div>
-        <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Gelderland</div><div class="detail-value">Haalbaarheidssubsidie max &euro;20K + renteloze lening tot &euro;200K (planontwikkeling)</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Zuid-Holland</div><div class="detail-value">Plankosten collectieve wooninitiatieven &euro;15K (open t/m 31-12-2026)</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Noord-Brabant</div><div class="detail-value">Subsidieregeling collectieve wooninitiatieven (budget &euro;600K, ronde 2025-2026 beeindigd maart 2026)</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Drenthe</div><div class="detail-value">Startsubsidie max &euro;5K + renteloze lening tot &euro;50K</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.gelderland.nl/themas/actieplan-wonen/collectieve-wooninitiatieven" target="_blank">Gelderland</a> &bull; <a href="https://www.zuid-holland.nl/online-regelen/subsidies/subsidies/plankosten-collectieve-wooninitiatieven-zuid/" target="_blank">Zuid-Holland</a></div></div></div>
         <div class="phases">
           <span class="phase phase-initiatief">Initiatief</span>
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Gelderland</div><div class="detail-value">Haalbaarheidssubsidie max &euro;20K + renteloze lening tot &euro;200K (planontwikkeling)</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Zuid-Holland</div><div class="detail-value">Plankosten collectieve wooninitiatieven &euro;15K (open t/m 31-12-2026)</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Noord-Brabant</div><div class="detail-value">Subsidieregeling collectieve wooninitiatieven (budget &euro;600K, ronde 2025-2026 beeindigd maart 2026)</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Drenthe</div><div class="detail-value">Startsubsidie max &euro;5K + renteloze lening tot &euro;50K</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.gelderland.nl/themas/actieplan-wonen/collectieve-wooninitiatieven" target="_blank">Gelderland</a> &bull; <a href="https://www.zuid-holland.nl/online-regelen/subsidies/subsidies/plankosten-collectieve-wooninitiatieven-zuid/" target="_blank">Zuid-Holland</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#3BD269">
         <div class="card-top">
           <div class="card-name">SVVE (VvE's &amp; Wooncooperaties)</div>
           <div class="card-amount">tot &euro;179M budget</div>
         </div>
         <div class="card-desc">Subsidie specifiek voor VvE's, wooncooperaties en woonverenigingen. Verlengd tot 2030. Geen maximumbedrag per VvE meer.</div>
-        <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">RVO</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Dekt</div><div class="detail-value">Isolatie, warmtepompen, zonnepanelen, proceskosten, verduurzamingsadvies, bouwbegeleiding (32 uur)</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rvo.nl/subsidies-financiering/svve" target="_blank">rvo.nl/svve</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
           <span class="phase phase-exploitatie">Exploitatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">RVO</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Dekt</div><div class="detail-value">Isolatie, warmtepompen, zonnepanelen, proceskosten, verduurzamingsadvies, bouwbegeleiding (32 uur)</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rvo.nl/subsidies-financiering/svve" target="_blank">rvo.nl/svve</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#3BD269">
         <div class="card-top">
           <div class="card-name">ISDE &mdash; Duurzaamheidssubsidies</div>
           <div class="card-amount">&euro;1K &ndash; &euro;15K p/w</div>
         </div>
         <div class="card-desc">Investeringssubsidie voor warmtepompen, isolatie, zonnepanelen. Budget 2026: &euro;511M.</div>
-        <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">RVO</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Budget raakt op &mdash; vroeg aanvragen. Aanvragen per woning. SVVE (hierboven) is vaak voordeliger voor cooperaties.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rvo.nl/subsidies-financiering/isde" target="_blank">rvo.nl/isde</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">RVO</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Budget raakt op &mdash; vroeg aanvragen. Aanvragen per woning. SVVE (hierboven) is vaak voordeliger voor cooperaties.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rvo.nl/subsidies-financiering/isde" target="_blank">rvo.nl/isde</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#3BD269">
         <div class="card-top">
           <div class="card-name">Stimuleringsregeling Flex- &amp; Transformatiewoningen</div>
           <div class="card-amount">&euro;20K/woning</div>
         </div>
         <div class="card-desc">Rijksbijdrage voor flexwoningen en transformatie (kantoor &rarr; woning). Via gemeente. 4e tranche open 19-01-2026 t/m 31-12-2027.</div>
-        <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">RVO, budget &euro;178,5M</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Inclusief &euro;6K voor sociaal beheer. Nieuw: ook woningsplitsing en optoppen.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rvo.nl/subsidies-financiering/sft" target="_blank">rvo.nl/sft</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-building"></i><div><div class="detail-label">Verstrekker</div><div class="detail-value">RVO, budget &euro;178,5M</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Inclusief &euro;6K voor sociaal beheer. Nieuw: ook woningsplitsing en optoppen.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rvo.nl/subsidies-financiering/sft" target="_blank">rvo.nl/sft</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#3BD269">
         <div class="card-top">
           <div class="card-name">EU-subsidies (NEB, EUI, EFRO)</div>
           <div class="card-amount">&euro;50K &ndash; &euro;5M</div>
         </div>
         <div class="card-desc">Europese subsidies voor innovatieve woonprojecten. Horizon/NEB (~&euro;120M/jaar), EUI 4e call deadline 15-06-2026 (max &euro;2M), EFRO Kansen voor West III.</div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">NEB: consortium 3+ entiteiten uit 3 landen. EUI: gemeenten 25K+ inwoners. Complexe procedures.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://new-european-bauhaus.europa.eu/funding_en" target="_blank">NEB</a> &bull; <a href="https://www.urban-initiative.eu/calls-proposals/fourth-call-proposals-innovative-actions" target="_blank">EUI</a> &bull; <a href="https://www.kansenvoorwest.nl" target="_blank">EFRO KvW</a></div></div></div>
         <div class="phases">
           <span class="phase phase-initiatief">Initiatief</span>
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
           <span class="phase phase-realisatie">Realisatie</span>
           <span class="phase phase-exploitatie">Exploitatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">NEB: consortium 3+ entiteiten uit 3 landen. EUI: gemeenten 25K+ inwoners. Complexe procedures.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://new-european-bauhaus.europa.eu/funding_en" target="_blank">NEB</a> &bull; <a href="https://www.urban-initiative.eu/calls-proposals/fourth-call-proposals-innovative-actions" target="_blank">EUI</a> &bull; <a href="https://www.kansenvoorwest.nl" target="_blank">EFRO KvW</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#3BD269">
         <div class="card-top">
           <div class="card-name">Fiscaal: VPB &amp; Verlengstukwinst</div>
           <div class="card-amount">Indirect voordeel</div>
         </div>
         <div class="card-desc">Cooperaties zijn VPB-plichtig, maar winst uitgekeerd aan leden (verlengstukprincipe) is aftrekbaar. De meeste wooncooperaties sturen op kostendekkend = geen VPB. ANBI-status is in de praktijk uitgesloten voor cooperaties (Platform31).</div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">ANBI-status vereist 90% activiteiten gericht op algemeen nut &mdash; een cooperatie dient primair het ledenbelang. Wel mogelijk: aparte stichting met maatschappelijk doel naast de cooperatie.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.cooplink.nl/kennisbank/fiscaal-in-de-exploitatie/" target="_blank">Cooplink</a> &bull; <a href="https://cooperatie.nl/informatie/fiscaliteiten/" target="_blank">cooperatie.nl</a></div></div></div>
         <div class="phases">
           <span class="phase phase-exploitatie">Exploitatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">ANBI-status vereist 90% activiteiten gericht op algemeen nut &mdash; een cooperatie dient primair het ledenbelang. Wel mogelijk: aparte stichting met maatschappelijk doel naast de cooperatie.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.cooplink.nl/kennisbank/fiscaal-in-de-exploitatie/" target="_blank">Cooplink</a> &bull; <a href="https://cooperatie.nl/informatie/fiscaliteiten/" target="_blank">cooperatie.nl</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
     </div>
+    </div></div>
   </section>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- 3. FONDSEN -->
   <!-- ═══════════════════════════════════════════════ -->
-  <section class="category">
+  <section class="category" data-color="#F4B400">
     <div class="cat-header">
       <div class="cat-icon" style="background:#F4B400"><i class="fa-solid fa-hand-holding-heart"></i></div>
       <div class="cat-title">Fondsen</div>
+      <span class="cat-count">8 bronnen</span>
+      <i class="fa-solid fa-chevron-right cat-chevron"></i>
     </div>
+    <div class="cat-body"><div class="cat-body-inner">
     <div class="cards">
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F4B400">
         <div class="card-top">
           <div class="card-name">Non Nobis</div>
           <div class="card-amount">Hypotheken &amp; overbrugging</div>
         </div>
         <div class="card-desc">Sociale onderneming (stichting, opgericht 2003, Zeist) die vastgoed uit de speculatieve markt haalt voor maatschappelijke organisaties. Biedt hypothecaire leningen, overbruggingsfinanciering en garanties.</div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Focus</div><div class="detail-value">Organisaties waar mens, milieu en/of cultuur centraal staan. Multigenerationeel wonen, zorgruimtes, community workshops.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Model</div><div class="detail-value">Revolverend: ontwikkelt initiatieven tot ze &ldquo;bankable&rdquo; zijn, herplaatst dan kapitaal. Partners: Triodos Bank, Rabobank, Stichting Grondbeheer.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.non-nobis.nl/" target="_blank">non-nobis.nl</a> &bull; Contact: rvb@non-nobis.nl</div></div></div>
         <div class="phases">
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Focus</div><div class="detail-value">Organisaties waar mens, milieu en/of cultuur centraal staan. Multigenerationeel wonen, zorgruimtes, community workshops.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Model</div><div class="detail-value">Revolverend: ontwikkelt initiatieven tot ze &ldquo;bankable&rdquo; zijn, herplaatst dan kapitaal. Partners: Triodos Bank, Rabobank, Stichting Grondbeheer.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.non-nobis.nl/" target="_blank">non-nobis.nl</a> &bull; Contact: rvb@non-nobis.nl</div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F4B400">
         <div class="card-top">
           <div class="card-name">Katalys</div>
           <div class="card-amount">Leningen &amp; garanties</div>
         </div>
         <div class="card-desc">Sociale financier die leningen en advies biedt aan gemeenschapsinitiatieven. Verstrekte financiering en bouwkostengarantie (&euro;175K) voor De Nieuwe Meent.</div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">Gemeenschapsgedreven project, maatschappelijk doel, levensvatbaar businessmodel, reguliere financiering niet haalbaar.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://katalys.nl/financieel/" target="_blank">katalys.nl</a></div></div></div>
         <div class="phases">
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">Gemeenschapsgedreven project, maatschappelijk doel, levensvatbaar businessmodel, reguliere financiering niet haalbaar.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://katalys.nl/financieel/" target="_blank">katalys.nl</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F4B400">
         <div class="card-top">
           <div class="card-name">Nationaal Groenfonds</div>
           <div class="card-amount">min &euro;200K</div>
         </div>
         <div class="card-desc">Leningen (geen subsidies) onder marktrente voor groene projecten. Niet specifiek voor woningbouw &mdash; wel voor duurzaamheidscomponenten van een bouwproject.</div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Strenge duurzaamheidscriteria. Focus op natuur, energie, circulair &mdash; niet op woningbouw zelf. Relevant als framing &ldquo;groen investering&rdquo; past.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.nationaalgroenfonds.nl/" target="_blank">nationaalgroenfonds.nl</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Strenge duurzaamheidscriteria. Focus op natuur, energie, circulair &mdash; niet op woningbouw zelf. Relevant als framing &ldquo;groen investering&rdquo; past.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.nationaalgroenfonds.nl/" target="_blank">nationaalgroenfonds.nl</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F4B400">
         <div class="card-top">
           <div class="card-name">Stimuleringsregeling Wonen en Zorg (SWZ)</div>
           <div class="card-amount">&euro;20K &ndash; &euro;200K + garantie</div>
         </div>
         <div class="card-desc">RVO-regeling voor wonen-zorginitiatieven. Initiatief: max &euro;20K subsidie. Planontwikkeling: lening tot &euro;200K. Realisatie: staatsgarantie voor 15% bouwkosten.</div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Relevant voor cooperaties die wonen en zorg combineren. Staatsgarantie kan bankfinanciering aantrekken.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rvo.nl/subsidies-financiering/stimuleringsregeling-wonen-en-zorg" target="_blank">rvo.nl/swz</a></div></div></div>
         <div class="phases">
           <span class="phase phase-initiatief">Initiatief</span>
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Relevant voor cooperaties die wonen en zorg combineren. Staatsgarantie kan bankfinanciering aantrekken.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.rvo.nl/subsidies-financiering/stimuleringsregeling-wonen-en-zorg" target="_blank">rvo.nl/swz</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F4B400">
         <div class="card-top">
           <div class="card-name">Stichting DOEN</div>
           <div class="card-amount">Subsidies &amp; leningen</div>
         </div>
         <div class="card-desc">Ondersteunt pioneers in regeneratieve economie. Woningbouw is geen kernfocus &mdash; wel kansrijk voor cooperaties met sterk circulair/regeneratief verhaal.</div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">Aanvraag min 4 maanden voor projectstart. Innovatief, vroege fase, maatschappelijk doel.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.doen.nl/" target="_blank">doen.nl</a></div></div></div>
         <div class="phases">
           <span class="phase phase-initiatief">Initiatief</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">Aanvraag min 4 maanden voor projectstart. Innovatief, vroege fase, maatschappelijk doel.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.doen.nl/" target="_blank">doen.nl</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F4B400">
         <div class="card-top">
           <div class="card-name">IONA Stichting</div>
           <div class="card-amount">&euro;250 &ndash; &euro;40K</div>
         </div>
         <div class="card-desc">Antroposofisch geinspireerd fonds (~&euro;2M/jaar) dat actief is in het wooncooperatie-veld via drie kanalen: projectsubsidies, Iona Vrijgoed (vastgoed uit de markt), en mede-initiator van Eigendom Anders.</div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Wat financieren ze</div><div class="detail-value">Proceskosten, community building, onderzoek naar cooperatieve modellen, kennisdeling, organisatieontwikkeling. Niet voor bouw- en verbouwkosten zelf.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Iona Vrijgoed</div><div class="detail-value">Eigen initiatief dat vastgoed permanent uit de speculatieve markt haalt en beschikbaar maakt voor &ldquo;geinspireerd wonen en werken&rdquo; tegen sociale huur. Gemodelleerd naar Zwitserse Edith Maryon Stiftung.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Eigendom Anders</div><div class="detail-value">Door IONA mede-geinitieerd (nu onafhankelijke stichting). Beweging rond alternatieve eigendomsmodellen, steward-ownership, commons &mdash; direct relevant voor wooncooperaties.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">Eenmalige subsidie, max 1 aanvraag per organisatie per jaar. Antroposofische achtergrond of aansluiting bij sociale vernieuwing helpt.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://iona.nl/aanvragen/projectaanvraag/" target="_blank">iona.nl/aanvragen</a> &bull; <a href="https://eigendomanders.nl" target="_blank">eigendomanders.nl</a> &bull; Contact: iona@iona.nl / ionavrijgoed@iona.nl</div></div></div>
         <div class="phases">
           <span class="phase phase-initiatief">Initiatief</span>
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Wat financieren ze</div><div class="detail-value">Proceskosten, community building, onderzoek naar cooperatieve modellen, kennisdeling, organisatieontwikkeling. Niet voor bouw- en verbouwkosten zelf.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Iona Vrijgoed</div><div class="detail-value">Eigen initiatief dat vastgoed permanent uit de speculatieve markt haalt en beschikbaar maakt voor &ldquo;geinspireerd wonen en werken&rdquo; tegen sociale huur. Gemodelleerd naar Zwitserse Edith Maryon Stiftung.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Eigendom Anders</div><div class="detail-value">Door IONA mede-geinitieerd (nu onafhankelijke stichting). Beweging rond alternatieve eigendomsmodellen, steward-ownership, commons &mdash; direct relevant voor wooncooperaties.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Voorwaarden</div><div class="detail-value">Eenmalige subsidie, max 1 aanvraag per organisatie per jaar. Antroposofische achtergrond of aansluiting bij sociale vernieuwing helpt.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://iona.nl/aanvragen/projectaanvraag/" target="_blank">iona.nl/aanvragen</a> &bull; <a href="https://eigendomanders.nl" target="_blank">eigendomanders.nl</a> &bull; Contact: iona@iona.nl / ionavrijgoed@iona.nl</div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F4B400">
         <div class="card-top">
           <div class="card-name">Regionale fondsen &amp; participaties</div>
           <div class="card-amount">Variabel</div>
         </div>
         <div class="card-desc">Regionale ontwikkelingsmaatschappijen en participatiefondsen die projectspecifiek kunnen meefinancieren.</div>
-        <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Voorbeelden</div><div class="detail-value">PDENH (Noord-Holland, ~5% rente, financierde ~10% De Warren), Invest-NL (woningbouw in mandaat), OostNL, BOM, LIOF, NOM</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.pimnh.nl/hulpmiddelen-pnh/pdenh" target="_blank">PDENH</a> &bull; <a href="https://invest-nl.nl/" target="_blank">Invest-NL</a></div></div></div>
         <div class="phases">
           <span class="phase phase-initiatief">Initiatief</span>
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
           <span class="phase phase-realisatie">Realisatie</span>
           <span class="phase phase-exploitatie">Exploitatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Voorbeelden</div><div class="detail-value">PDENH (Noord-Holland, ~5% rente, financierde ~10% De Warren), Invest-NL (woningbouw in mandaat), OostNL, BOM, LIOF, NOM</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.pimnh.nl/hulpmiddelen-pnh/pdenh" target="_blank">PDENH</a> &bull; <a href="https://invest-nl.nl/" target="_blank">Invest-NL</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
     </div>
+    </div></div>
   </section>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- 4. GARANTIES & BORGSTELLINGEN -->
   <!-- ═══════════════════════════════════════════════ -->
-  <section class="category">
+  <section class="category" data-color="#F09020">
     <div class="cat-header">
       <div class="cat-icon" style="background:#F09020"><i class="fa-solid fa-shield-halved"></i></div>
       <div class="cat-title">Garanties & Borgstellingen</div>
+      <span class="cat-count">3 bronnen</span>
+      <i class="fa-solid fa-chevron-right cat-chevron"></i>
     </div>
+    <div class="cat-body"><div class="cat-body-inner">
     <div class="cards">
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F09020">
         <div class="card-top">
           <div class="card-name">WSW (Waarborgfonds Sociale Woningbouw)</div>
           <div class="card-amount">Borging tot 100%</div>
         </div>
         <div class="card-desc">Borging van leningen voor toegelaten instellingen. Verlaagt rente 0,5&ndash;1%. Driepuntsstelsel: WSW + Rijk + gemeenten. Wooncooperaties hebben momenteel GEEN toegang.</div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Status</div><div class="detail-value">Initiatiefwet Bevordering Wooncooperaties (ingediend 16-01-2026 door Beckerman/Cooplink) verbetert juridische positie maar opent WSW-borging NIET expliciet voor cooperaties.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Workaround</div><div class="detail-value">Sommige cooperaties partneren met een woningcorporatie (TI) die WSW-borging heeft. Complex en beperkt autonomie.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.wsw.nl/" target="_blank">wsw.nl</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Status</div><div class="detail-value">Initiatiefwet Bevordering Wooncooperaties (ingediend 16-01-2026 door Beckerman/Cooplink) verbetert juridische positie maar opent WSW-borging NIET expliciet voor cooperaties.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Workaround</div><div class="detail-value">Sommige cooperaties partneren met een woningcorporatie (TI) die WSW-borging heeft. Complex en beperkt autonomie.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.wsw.nl/" target="_blank">wsw.nl</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F09020">
         <div class="card-top">
           <div class="card-name">NHG (Nationale Hypotheek Garantie)</div>
           <div class="card-amount">Tot &euro;470K p.p. (2026)</div>
         </div>
         <div class="card-desc">Borgstelling voor individuele hypotheken. Alleen voor CPO (koopwoningen), niet voor huurcooperaties met collectieve hypotheek.</div>
-        <div class="detail-row"><i class="fa-solid fa-percent"></i><div><div class="detail-label">Voordeel</div><div class="detail-value">Rentekorting 0,3&ndash;0,6%. Met energiebesparing tot &euro;498K. Premie 0,4% eenmalig.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.nhg.nl/" target="_blank">nhg.nl</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-percent"></i><div><div class="detail-label">Voordeel</div><div class="detail-value">Rentekorting 0,3&ndash;0,6%. Met energiebesparing tot &euro;498K. Premie 0,4% eenmalig.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.nhg.nl/" target="_blank">nhg.nl</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F09020">
         <div class="card-top">
           <div class="card-name">Gemeentegaranties</div>
           <div class="card-amount">Variabel</div>
         </div>
         <div class="card-desc">Gemeenten kunnen borgstellingen afgeven voor leningen aan cooperaties. In de praktijk verlenen gemeenten vaker directe leningen of subsidies dan garanties (o.a. EMU-saldo beperkingen).</div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Voorbeeld</div><div class="detail-value">Amsterdam financierde 31% van De Nieuwe Meent via gemeentelijke lening. Geen garantie maar directe financiering.</div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Voorbeeld</div><div class="detail-value">Amsterdam financierde 31% van De Nieuwe Meent via gemeentelijke lening. Geen garantie maar directe financiering.</div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
     </div>
+    </div></div>
   </section>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- 5. BEWONERSFINANCIERING -->
   <!-- ═══════════════════════════════════════════════ -->
-  <section class="category">
+  <section class="category" data-color="#c4607d">
     <div class="cat-header">
       <div class="cat-icon" style="background:#c4607d"><i class="fa-solid fa-piggy-bank"></i></div>
       <div class="cat-title">Bewonersfinanciering</div>
+      <span class="cat-count">2 bronnen</span>
+      <i class="fa-solid fa-chevron-right cat-chevron"></i>
     </div>
+    <div class="cat-body"><div class="cat-body-inner">
     <div class="cards">
 
-      <div class="card">
+      <div class="card" style="--cat-color:#c4607d">
         <div class="card-top">
           <div class="card-name">Ledeninleg / Eigen inbreng</div>
           <div class="card-amount">&euro;1K &ndash; &euro;50K p.p.</div>
         </div>
         <div class="card-desc">Leden kopen certificaten van deelname, evenredig aan woninggrootte. Typisch 5&ndash;15% van totaal. De Nieuwe Meent: 2,1% van totaalbudget.</div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Structuur</div><div class="detail-value">Meestal certificatenmodel: evenredige verdeling, mogelijk met dividendrecht. Stemrecht los van kapitaalinbreng (1 lid = 1 stem).</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Inclusiviteitsvraagstuk bij hoge inleg. Sommige cooperaties differentieerden naar inkomen of gebruiken solidariteitsmechanismen.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.cooplink.nl/kennis/de-wooncooperatie/juridisch" target="_blank">Cooplink</a></div></div></div>
         <div class="phases">
           <span class="phase phase-initiatief">Initiatief</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Structuur</div><div class="detail-value">Meestal certificatenmodel: evenredige verdeling, mogelijk met dividendrecht. Stemrecht los van kapitaalinbreng (1 lid = 1 stem).</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Inclusiviteitsvraagstuk bij hoge inleg. Sommige cooperaties differentieerden naar inkomen of gebruiken solidariteitsmechanismen.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.cooplink.nl/kennis/de-wooncooperatie/juridisch" target="_blank">Cooplink</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#c4607d">
         <div class="card-top">
           <div class="card-name">Obligatieleningen / Crowdfunding</div>
           <div class="card-amount">&euro;50K &ndash; &euro;5M</div>
         </div>
         <div class="card-desc">Directe obligatie-uitgifte door de cooperatie onder AFM-vrijstelling (&lt;&euro;5M/12 maanden, geen prospectus maar wel informatiedocument verplicht).</div>
-        <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Voorbeelden</div><div class="detail-value">De Warren: &euro;344K van 97 investeerders (2,3&ndash;2,7%, 7-20 jaar). De Nieuwe Meent: vanaf &euro;250, 1,8&ndash;2,2%, 5-15 jaar. Aparte stichting als bescherming.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Juridisch advies nodig (Wft art. 3:5). AFM-melding verplicht. Actieve campagne nodig. Platforms: Oneplanetcrowd/Invesdor, CrowdRealEstate &mdash; maar directe uitgifte is standaard.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.afm.nl/en/sector/effectenuitgevende-ondernemingen/prospectustoezicht/prospectusplicht" target="_blank">AFM prospectusplicht</a></div></div></div>
         <div class="phases">
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list"></i><div><div class="detail-label">Voorbeelden</div><div class="detail-value">De Warren: &euro;344K van 97 investeerders (2,3&ndash;2,7%, 7-20 jaar). De Nieuwe Meent: vanaf &euro;250, 1,8&ndash;2,2%, 5-15 jaar. Aparte stichting als bescherming.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Juridisch advies nodig (Wft art. 3:5). AFM-melding verplicht. Actieve campagne nodig. Platforms: Oneplanetcrowd/Invesdor, CrowdRealEstate &mdash; maar directe uitgifte is standaard.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.afm.nl/en/sector/effectenuitgevende-ondernemingen/prospectustoezicht/prospectusplicht" target="_blank">AFM prospectusplicht</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
     </div>
+    </div></div>
   </section>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- 6. IMPACT INVESTEERDERS -->
   <!-- ═══════════════════════════════════════════════ -->
-  <section class="category">
+  <section class="category" data-color="#F23578">
     <div class="cat-header">
       <div class="cat-icon" style="background:#F23578"><i class="fa-solid fa-hand-holding-dollar"></i></div>
       <div class="cat-title">Impact Investeerders</div>
+      <span class="cat-count">3 bronnen</span>
+      <i class="fa-solid fa-chevron-right cat-chevron"></i>
     </div>
+    <div class="cat-body"><div class="cat-body-inner">
     <div class="cards">
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F23578">
         <div class="card-top">
           <div class="card-name">Rabo Impact Foundation</div>
           <div class="card-amount">&euro;2M+ impactleningen</div>
         </div>
         <div class="card-desc">Maart 2026 gelanceerd. Startkapitaal &euro;102M, target &euro;1 miljard. Onafhankelijke ANBI. Betaalbaar wonen expliciet als doelsegment benoemd. ~20 investeringen per jaar.</div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Wat</div><div class="detail-value">Impactleningen vanaf &euro;2M, equity-investeringen vanaf &euro;1M. Focus: marktfalen waar reguliere financiering tekortschiet &mdash; precies de cooperatie-gap.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Interim-CEO expliciet over wooncooperaties: &ldquo;structureel financieringsgat waar zelfs als bank, overheid en leden maximaal bijdragen, een gat resteert.&rdquo;</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://cooperatie.nl/nieuws/rabo-impact-foundation-een-nieuw-instrument-voor-maatschappelijke-uitdagingen/" target="_blank">cooperatie.nl</a></div></div></div>
         <div class="phases">
           <span class="phase phase-planontwikkeling">Planontwikkeling</span>
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Wat</div><div class="detail-value">Impactleningen vanaf &euro;2M, equity-investeringen vanaf &euro;1M. Focus: marktfalen waar reguliere financiering tekortschiet &mdash; precies de cooperatie-gap.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Bijzonderheid</div><div class="detail-value">Interim-CEO expliciet over wooncooperaties: &ldquo;structureel financieringsgat waar zelfs als bank, overheid en leden maximaal bijdragen, een gat resteert.&rdquo;</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://cooperatie.nl/nieuws/rabo-impact-foundation-een-nieuw-instrument-voor-maatschappelijke-uitdagingen/" target="_blank">cooperatie.nl</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F23578">
         <div class="card-top">
           <div class="card-name">ASN Impact Investors</div>
           <div class="card-amount">Via obligaties/fondsen</div>
         </div>
         <div class="card-desc">Vermogensbeheerder (12 fondsen) van de Volksbank. Investeert in duurzame obligaties en sociale bonds &mdash; niet in directe projectleningen. Potentieel relevant als koper van cooeperatieve obligaties.</div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://beleggingsfondsen.asnbank.nl/" target="_blank">asnbank.nl/fondsen</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://beleggingsfondsen.asnbank.nl/" target="_blank">asnbank.nl/fondsen</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#F23578">
         <div class="card-top">
           <div class="card-name">PDENH (Noord-Holland)</div>
           <div class="card-amount">Variabel (~5% rente)</div>
         </div>
         <div class="card-desc">Participatiefonds Duurzame Economie Noord-Holland. Financierde ~10% van De Warren. Hogere rente dan bankfinanciering maar vult gat.</div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.pimnh.nl/hulpmiddelen-pnh/pdenh" target="_blank">pimnh.nl</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.pimnh.nl/hulpmiddelen-pnh/pdenh" target="_blank">pimnh.nl</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
     </div>
+    </div></div>
   </section>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- 7. EUROPEES & INSTITUTIONEEL -->
   <!-- ═══════════════════════════════════════════════ -->
-  <section class="category">
+  <section class="category" data-color="#6B5CE7">
     <div class="cat-header">
       <div class="cat-icon" style="background:#6B5CE7"><i class="fa-solid fa-globe-europe"></i></div>
       <div class="cat-title">Europees & Institutioneel Kapitaal</div>
+      <span class="cat-count">4 bronnen</span>
+      <i class="fa-solid fa-chevron-right cat-chevron"></i>
     </div>
+    <div class="cat-body"><div class="cat-body-inner">
     <div class="note">Nieuwe categorie. Europese instellingen en pensioenfondsen als potentiele geldverstrekkers voor gebundelde wooncooperaties.</div>
     <div class="cards">
 
-      <div class="card">
+      <div class="card" style="--cat-color:#6B5CE7">
         <div class="card-top">
           <div class="card-name">CEB &mdash; Sostre Civic model (Spanje)</div>
           <div class="card-amount">&euro;31M (350+ woningen)</div>
         </div>
         <div class="card-desc">Council of Europe Development Bank financierde Sostre Civic (grootste cooperatie Catalonie, 1.200+ eenheden) met InvestEU-garantie. Het Spaanse voorbeeld voor cooperatieve woningfinanciering.</div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Structuur</div><div class="detail-value">&euro;31M CEB-lening op &euro;62M totaal. 350+ cooperatieve huurwoningen op publieke grond. &ldquo;Cessio d'us&rdquo; (gebruiksrecht) model. 25% voor kwetsbare doelgroepen.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Repliceerbaar?</div><div class="detail-value">NL is CEB-lidstaat. InvestEU Social Window (&euro;2,8 mrd garanties) is pan-Europees. Uitdaging: NL cooperaties zijn kleiner en jonger &mdash; bundeling van 10-20 cooperaties nodig voor schaal.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://coebank.org/en/news-and-publications/news/ceb-to-finance-over-350-cooperative-housing-units-in-catalonia-spain/" target="_blank">CEB persbericht</a> &bull; <a href="https://sostrecivic.coop/en/sostre-civic-obtenim-31-milions-de-fons-europeus-per-a-la-construccio-de-mes-de-350-habitatges-socials/" target="_blank">Sostre Civic</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Structuur</div><div class="detail-value">&euro;31M CEB-lening op &euro;62M totaal. 350+ cooperatieve huurwoningen op publieke grond. &ldquo;Cessio d'us&rdquo; (gebruiksrecht) model. 25% voor kwetsbare doelgroepen.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Repliceerbaar?</div><div class="detail-value">NL is CEB-lidstaat. InvestEU Social Window (&euro;2,8 mrd garanties) is pan-Europees. Uitdaging: NL cooperaties zijn kleiner en jonger &mdash; bundeling van 10-20 cooperaties nodig voor schaal.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://coebank.org/en/news-and-publications/news/ceb-to-finance-over-350-cooperative-housing-units-in-catalonia-spain/" target="_blank">CEB persbericht</a> &bull; <a href="https://sostrecivic.coop/en/sostre-civic-obtenim-31-milions-de-fons-europeus-per-a-la-construccio-de-mes-de-350-habitatges-socials/" target="_blank">Sostre Civic</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#6B5CE7">
         <div class="card-top">
           <div class="card-name">EIB &mdash; Housing Action Plan</div>
           <div class="card-amount">&euro;6 mrd/jaar (2026+)</div>
         </div>
         <div class="card-desc">EIB-groep verdubbelt woningfinanciering naar &euro;6 mrd/jaar. Doel: 1 miljoen betaalbare woningen tegen 2030. In NL via NWB Bank en BNG Bank voor corporaties. Nog geen directe financiering aan NL cooperaties.</div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Kans</div><div class="detail-value">Pan-European Housing Investment Platform in opbouw. NL heeft nog geen dedicated partner voor cooperatief wonen op dit platform.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.eib.org/en/press/all/2025-542-eib-group-doubles-its-financing-to-eur6-billion-for-homes-contributing-to-the-european-commission-s-affordable-housing-plan" target="_blank">EIB Housing Plan</a> &bull; <a href="https://housing.ec.europa.eu/pan-european-housing-investment-platform_en" target="_blank">EU Platform</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Kans</div><div class="detail-value">Pan-European Housing Investment Platform in opbouw. NL heeft nog geen dedicated partner voor cooperatief wonen op dit platform.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://www.eib.org/en/press/all/2025-542-eib-group-doubles-its-financing-to-eur6-billion-for-homes-contributing-to-the-european-commission-s-affordable-housing-plan" target="_blank">EIB Housing Plan</a> &bull; <a href="https://housing.ec.europa.eu/pan-european-housing-investment-platform_en" target="_blank">EU Platform</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#6B5CE7">
         <div class="card-top">
           <div class="card-name">Pensioenfondsen (ABP, PFZW, bpfBOUW)</div>
           <div class="card-amount">Potentieel &euro;100M+</div>
         </div>
         <div class="card-desc">NL pensioenfondsen investeren al &euro;5+ mrd in betaalbare woningen. ABP streeft &euro;10 mrd impact in NL tegen 2030. Nog niet in cooperaties &mdash; maar structuur is repliceerbaar.</div>
-        <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Precedent</div><div class="detail-value">LIST Amsterdam: APG verstrekt via online veilingplatform leningen aan corporaties (~&euro;500M in 2 jaar). WSW-borging vereist &mdash; die cooperaties niet hebben.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Mogelijke structuur</div><div class="detail-value">SPV geeft obligaties uit gedekt door gebundelde cooperatiehypotheken. Pensioenfonds als koper. First-loss via Fonds Cooperatief Wonen + InvestEU garantie. APG meest logische partner.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Uitdaging</div><div class="detail-value">Geen WSW-borging = hogere rente (2&ndash;3% boven risicovrij). Schaal nodig: bundeling 10-20 cooperaties. Wtp-hervorming geeft meer flexibiliteit voor alternatieve beleggingen.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://apg.nl/en/press-releases/apg-provides-capital-for-housing-associations-on-new-platform/" target="_blank">APG LIST</a> &bull; <a href="https://www.bouwinvest.com/investments/impact-partnership/" target="_blank">Bouwinvest Impact</a> &bull; <a href="https://finance-ideas.nl/wp-content/uploads/2020/11/rapport-financiering-van-wooncooperaties.pdf" target="_blank">Finance Ideas rapport</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
           <span class="phase phase-exploitatie">Exploitatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-star"></i><div><div class="detail-label">Precedent</div><div class="detail-value">LIST Amsterdam: APG verstrekt via online veilingplatform leningen aan corporaties (~&euro;500M in 2 jaar). WSW-borging vereist &mdash; die cooperaties niet hebben.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-list-check"></i><div><div class="detail-label">Mogelijke structuur</div><div class="detail-value">SPV geeft obligaties uit gedekt door gebundelde cooperatiehypotheken. Pensioenfonds als koper. First-loss via Fonds Cooperatief Wonen + InvestEU garantie. APG meest logische partner.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Uitdaging</div><div class="detail-value">Geen WSW-borging = hogere rente (2&ndash;3% boven risicovrij). Schaal nodig: bundeling 10-20 cooperaties. Wtp-hervorming geeft meer flexibiliteit voor alternatieve beleggingen.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://apg.nl/en/press-releases/apg-provides-capital-for-housing-associations-on-new-platform/" target="_blank">APG LIST</a> &bull; <a href="https://www.bouwinvest.com/investments/impact-partnership/" target="_blank">Bouwinvest Impact</a> &bull; <a href="https://finance-ideas.nl/wp-content/uploads/2020/11/rapport-financiering-van-wooncooperaties.pdf" target="_blank">Finance Ideas rapport</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
-      <div class="card">
+      <div class="card" style="--cat-color:#6B5CE7">
         <div class="card-top">
           <div class="card-name">MOBA Housing SCE (cooperatief-van-cooperatieven)</div>
           <div class="card-amount">Revolverend</div>
         </div>
         <div class="card-desc">Europese cooperatieve vennootschap die als &ldquo;cooperatie van cooperaties&rdquo; opereert. MOBA Accelerator biedt korte-termijn overbruggingsleningen voor aankoop- en bouwfases.</div>
-        <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Momenteel gericht op Centraal/Zuidoost-Europa, maar model is repliceerbaar voor NL/West-Europa.</div></div></div>
-        <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://moba.coop/" target="_blank">moba.coop</a> &bull; <a href="https://moba.coop/moba-accelerator/" target="_blank">MOBA Accelerator</a></div></div></div>
         <div class="phases">
           <span class="phase phase-realisatie">Realisatie</span>
         </div>
+        <div class="card-details">
+          <div class="detail-row"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="detail-label">Let op</div><div class="detail-value">Momenteel gericht op Centraal/Zuidoost-Europa, maar model is repliceerbaar voor NL/West-Europa.</div></div></div>
+          <div class="detail-row"><i class="fa-solid fa-link"></i><div><div class="detail-label">Bron</div><div class="detail-value"><a href="https://moba.coop/" target="_blank">moba.coop</a> &bull; <a href="https://moba.coop/moba-accelerator/" target="_blank">MOBA Accelerator</a></div></div></div>
+        </div>
+        <div class="card-toggle"><span class="arrow-collapsed">Meer info &#9656;</span><span class="arrow-expanded">Minder &#9662;</span></div>
       </div>
 
     </div>
+    </div></div>
   </section>
 
 </div>
 
 <div class="footer">
-  <a href="https://crowdbuilding.com">CrowdBuilding</a> &mdash; Financieringslandschap Wooncooperaties &mdash; Onderzoek april 2026<br>
+  <a href="https://solidairwoonfonds.nl">Solidair Woonfonds</a> &mdash; Financieringslandschap Wooncooperaties &mdash; Onderzoek april 2026<br>
   Bronnen: Cooplink, Volkshuisvesting NL, RVO, SVn, Rijksoverheid, Finance Ideas, EIB, CEB, APG, Rabobank, GLS Bank, Gebiedsontwikkeling.nu, NUL20
 </div>
+
+<script>
+(function() {
+  // Category accordion
+  document.querySelectorAll('.cat-header').forEach(function(header) {
+    header.addEventListener('click', function() {
+      var category = header.closest('.category');
+      category.classList.toggle('open');
+    });
+  });
+
+  // Card expand/collapse
+  document.querySelectorAll('.card').forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      // Don't toggle if clicking a link
+      if (e.target.tagName === 'A' || e.target.closest('a')) return;
+      card.classList.toggle('expanded');
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
