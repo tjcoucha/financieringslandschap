@@ -3,9 +3,5 @@
   "outputDirectory": "public",
   "redirects": [
     { "source": "/", "destination": "/financieringslandschap", "statusCode": 302 }
-  ],
-  "rewrites": [
-    { "source": "/financieringslandschap", "destination": "/index.html" },
-    { "source": "/financieringslandschap/", "destination": "/index.html" }
   ]
 }
