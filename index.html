@@ -8,6 +8,22 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700&family=Funnel+Display:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script>
+(function(){
+  var h='ce10e98a68b008ad1a6f883a104b721704721fa5';
+  function sha1(s){
+    var b=new TextEncoder().encode(s),c=crypto.subtle.digest('SHA-1',b);
+    return c.then(function(a){return Array.from(new Uint8Array(a)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')});
+  }
+  if(sessionStorage.getItem('_auth')===h){return;}
+  var p=prompt('Wachtwoord:');
+  if(!p){document.documentElement.innerHTML='';return;}
+  sha1(p).then(function(d){
+    if(d===h){sessionStorage.setItem('_auth',h);}
+    else{alert('Onjuist wachtwoord');document.documentElement.innerHTML='';location.reload();}
+  });
+})();
+</script>
 <style>
   :root {
     --bg: #f7f8fa;
